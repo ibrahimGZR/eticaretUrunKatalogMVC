@@ -1,0 +1,52 @@
+﻿@using Abc.MvcWebUI.Entity
+@model IEnumerable<Abc.MvcWebUI.Models.UserOrderModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Sipariş Bilgileriniz</h2>
+            <hr />
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Order Number</th>
+                        <th>Order Date</th>
+                        <th>Total</th>
+                        <th colspan="2"></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.OrderNumber</td>
+                            <td>@item.OrderDate.ToShortDateString()</td>
+                            <td>
+                                <i class="fa fa-try" aria-hidden="true"></i>
+                                @item.Total
+                            </td>
+                            @if (item.OrderState == EnumOrderState.Waiting)
+                            {
+                                <td><a class="badge badge-warning">@item.OrderState</a></td>
+                            }
+                            else
+                            {
+                                <td><a class="badge badge-success">@item.OrderState</a></td>
+                            }
+
+                            <td>@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" })</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

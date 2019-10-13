@@ -1,0 +1,98 @@
+﻿@using Abc.MvcWebUI.Entity
+@model Abc.MvcWebUI.Models.OrderDetailsModel
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Sipariş Detay Bilgileriniz</h2>
+            <hr />
+
+            <dl class="row">
+
+
+                <dt class="col-sm-3">Order State</dt>
+                <dd class="col-sm-9">
+                    @if (Model.OrderState == EnumOrderState.Waiting)
+                    {
+                        <a class="badge badge-warning">@Model.OrderState</a>
+                    }
+                    else
+                    {
+                       <a class="badge badge-success">@Model.OrderState</a>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">Order Id</dt>
+                <dd class="col-sm-9">@Model.OrderId</dd>
+
+                <dt class="col-sm-3">Order Number</dt>
+                <dd class="col-sm-9">@Model.OrderNumber</dd>
+
+                <dt class="col-sm-3">Order Date</dt>
+                <dd class="col-sm-9">@Model.OrderDate</dd>
+
+                <dt class="col-sm-3">Total</dt>
+                <dd class="col-sm-9">
+                    <i class="fa fa-try" aria-hidden="true"></i>
+                    @Model.Total
+                </dd>
+
+                <dt class="col-sm-3"><br /></dt>
+                <dd class="col-sm-9"><hr /></dd>
+
+                <dt class="col-sm-3"><br />Adres</dt>
+                <dd class="col-sm-9">
+                    <h6>@Model.AdresBasligi</h6>
+                    <br />
+                    @Model.Adres
+                    <br />
+                    @Model.Sehir - @Model.Semt - @Model.Mahalle
+                    <br />
+                    @Model.PostaKodu
+                </dd>
+
+                <dt class="col-sm-3"><br /></dt>
+                <dd class="col-sm-9"><br /></dd>
+
+
+                <dt class="col-sm-3"><br />Product</dt>
+                <dd class="col-sm-9">
+
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.OrdenLines)
+                            {
+                                <tr>
+                                    <td><img src="~/Upload/@item.Image" width="70" /></td>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.Quantity</td>
+                                    <td width="75px">
+                                        <i class="fa fa-try" aria-hidden="true"></i>
+                                        @item.Price
+                                    </td>
+                                    <td>@Html.ActionLink("Details", "Details", "Home", new { id = item.ProductId }, new { @class = "btn btn-primary btn-sm", target = "_blank" })</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
