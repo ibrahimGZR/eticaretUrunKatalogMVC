@@ -32,7 +32,7 @@
                     <dl class="row">
                         @Html.HiddenFor(i => i.OrderId)
                         <dt class="col-sm-7">
-                            @Html.EnumDropDownListFor(i => i.OrderState, "Select Order State", new { @class = "form-control" })
+                            @Html.EnumDropDownListFor(i => i.OrderState,null, new { @class = "form-control" })
                         </dt>
                         <dd class="col-sm-5">
                             <button type="submit" class="btn btn-primary btn-sm">Update</button>
@@ -93,7 +93,7 @@
                         @foreach (var item in Model.OrdenLines)
                         {
                             <tr>
-                                <td><img src="~/Upload/@item.Image" width="70" /></td>
+                                <td><img src="@item.Image" width="70" /></td>
                                 <td>@item.ProductName</td>
                                 <td>@item.Quantity</td>
                                 <td width="75px">

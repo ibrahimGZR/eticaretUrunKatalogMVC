@@ -31,6 +31,11 @@ namespace Abc.MvcWebUI.Controllers
             return View(urunler);
         }
 
+        public ActionResult AboutUs()
+        {
+            return View();
+        }
+
         public ActionResult Details(int id)
         {
             return View(_context.Products.Where(i => i.Id == id).FirstOrDefault());

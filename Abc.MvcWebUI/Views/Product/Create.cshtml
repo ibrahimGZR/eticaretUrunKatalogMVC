@@ -8,8 +8,8 @@
 <div class="container pb-5">
 
     <h2>Yeni Ürün</h2>
-    <hr/>
-    @using (Html.BeginForm())
+    <hr />
+    @using (Html.BeginForm(null,null,FormMethod.Post, new { enctype="multipart/form-data"}))
     {
         @Html.AntiForgeryToken()
 
@@ -52,7 +52,9 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.Image, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="file-loading">
+                        <input id="files" name="files" type="file" multiple />
+                    </div>
                     @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -88,13 +90,42 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Create" class="btn btn-primary" />
-                    @Html.ActionLink("Back to List", "Index",null,new {@class="btn btn-warning"})
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-warning" })
                 </div>
             </div>
         </div>
     }
 
+
 </div>
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+<script src="~/Content/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Content/Scripts/jquery.validate.min.js"></script>
+<script src="~/Content/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+        $(document).ready(function() {
+          $("#files").fileinput({
+            language: 'tr',
+            previewFileType: "image",
+            uploadAsync: true,
+            dropZoneTitle: "Resminizi buraya bırakabilirsiniz.",
+            browseLabel: "Resim Seçiniz",
+            browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
+            showUpload: false,
+            removeLabel: "İptal",
+            removeIcon: "<i class=\"glyphicon glyphicon-trash\" style=\"width:15px;height:15px;\"></i> ",
+            allowFileExtensions: ['jpg','png','gif'],
+            maxFileCount: 1,
+            maxImageWidth: 800,
+            maxImageHeight: 600,
+            resizePreference: 'width',
+            resizeImageQuality: 0.75
+         });
+        });
+
+</script>
+
+
+

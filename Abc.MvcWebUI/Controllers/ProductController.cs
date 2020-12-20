@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -49,13 +50,52 @@ namespace Abc.MvcWebUI.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,Price,Stock,Image,IsHome,IsApproved,CategoryId")] Product product)
+        public ActionResult Create([Bind(Include = "Id,Name,Description,Price,Stock,Image,IsHome,IsApproved,CategoryId")] Product product, HttpPostedFileBase[] files)
         {
             if (ModelState.IsValid)
             {
+               
                 db.Products.Add(product);
                 db.SaveChanges();
+
+
+                var folder = Server.MapPath(string.Format("~/Upload/") + product.Id.ToString());
+                var info = new DirectoryInfo(folder);
+                if (!info.Exists)
+                {
+                    info.Create();
+                }
+
+                for (int i = 0; i < files.Length; i++)
+                {
+
+
+                    var extension = Path.GetExtension(files[i].FileName);
+
+
+
+                    var randomfilename = Path.GetRandomFileName();
+                    var filename = Path.ChangeExtension(randomfilename, ".jpg");
+
+                    var path = Path.Combine(folder, filename);
+
+                    files[i].SaveAs(path);
+
+                    if (i == 0)
+                    {
+                        var prd = db.Products.FirstOrDefault(a => a.Id == product.Id);
+                        prd.Image = "/Upload/" + product.Id.ToString() + "/" + filename.ToString();
+
+                        db.SaveChanges();
+                    }
+
+                }
+
+
                 return RedirectToAction("Index");
+
+
+
             }
 
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", product.CategoryId);
@@ -65,6 +105,7 @@ namespace Abc.MvcWebUI.Controllers
         // GET: Product/Edit/5
         public ActionResult Edit(int? id)
         {
+            
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -120,7 +161,25 @@ namespace Abc.MvcWebUI.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        //public ActionResult ImageUpload(HttpPostedFileBase[] files) 
+        //{
+        //    for (int i = 0; i < files.Length; i++)
+        //    {
+        //        var extension = Path.GetExtension(files[i].FileName);
 
+                
+        //            var folder = Server.MapPath("~/Upload/");
+        //            var randomfilename = Path.GetRandomFileName();
+        //            var filename = Path.ChangeExtension(randomfilename, ".jpg");
+
+        //            var path = Path.Combine(folder, filename);
+
+        //        files[i].SaveAs(path);
+                
+        //    }
+        //    return Json("");
+        //}
         protected override void Dispose(bool disposing)
         {
             if (disposing)

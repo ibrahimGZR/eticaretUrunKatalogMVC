@@ -4,19 +4,22 @@
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+@{var folder = Server.MapPath(string.Format("/Upload/") + Model.Id.ToString());
+    var info = new DirectoryInfo(folder);
+}
 
 <div class="container pb-5">
     <h2>Ürün Güncelle</h2>
-    <hr/>
+    <hr />
 
-    @using (Html.BeginForm())
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
         <div class="form-horizontal">
-         
+
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.Id, new { @id = "id" })
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -53,7 +56,11 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.Image, new { htmlAttributes = new { @class = "form-control" } })
+
+                    <div class="file-loading">
+
+                        <input id="files" name="files" type="file" multiple />
+                    </div>
                     @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -89,17 +96,60 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Save" class="btn btn-primary" />
-                    @Html.ActionLink("Ürün Listesi", "Index",null,new {@class="btn btn-warning"})
+                    @Html.ActionLink("Ürün Listesi", "Index", null, new { @class = "btn btn-warning" })
                 </div>
             </div>
         </div>
     }
 
     <div>
-       
+
     </div>
 
 </div>
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Content/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Content/Scripts/jquery.validate.min.js"></script>
+<script src="~/Content/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+<script>
+        $(document).ready(function() {
+            $("#files").fileinput({
+                language: 'tr',
+                previewFileType: "image",
+                uploadAsync: true,
+                dropZoneTitle: "Resminizi buraya bırakabilirsiniz.",
+                browseLabel: "Resim Seçiniz",
+                browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i>",
+                showUpload: false,
+                removeLabel: "İptal",
+                removeIcon: "<i class=\"glyphicon glyphicon-trash\"></i>",
+                allowFileExtensions: ['jpg','png','gif'],
+                maxFileCount: 1,
+                maxImageWidth: 800,
+                maxImageHeight: 600,
+                resizePreference: 'width',
+                resizeImageQuality: 0.75,
+                initialPreview:
+                    '@{foreach (var item in info.GetFiles("*.jpg", SearchOption.TopDirectoryOnly))
+                        {<div class="file-preview-frame krajee-default  kv-preview-thumb" data-template="image"><img src="/Upload/@Model.Id/@item.Name" class="file-preview-image kv-preview-data" title="@item.Name" alt="@item.Name" style="width:auto;height:auto;max-width:100%;max-height:100%;"></div>}
+                     }'
+               
+
+
+         });
+        });
+
+</script>
+
+
+
+@*@{var folder = Server.MapPath(string.Format("/Upload/") + Model.Id.ToString());
+        var info = new DirectoryInfo(folder);
+
+    }
+    @foreach (var item in info.GetFiles("*.jpg", SearchOption.TopDirectoryOnly))
+    {
+        <img src="/Upload/@Model.Id/@item.Name" />
+    }*@
+
